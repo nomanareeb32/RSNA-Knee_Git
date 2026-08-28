@@ -1,0 +1,33 @@
+# RSNA Knee Abnormality Detection - Training Configuration
+# Optimized for RTX 4050 (6GB VRAM) + JPEG 224x224 dataset
+
+model:
+  backbone: 'resnet50'
+  aggregation: 'attention'       # attention > max/mean for MRI
+  pretrained: true
+  num_abnormalities: 12
+
+data:
+  data_root: 'data/'             # contains train_series/, test_series/, train.csv
+  train_csv: 'data/train.csv'
+  target_size: 224               # JPEG dataset is already 224x224
+  max_slices: 64
+  num_workers: 4
+
+training:
+  batch_size: 4                  # safe for 6GB VRAM at 224x224
+  num_epochs: 30
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-5
+  min_lr: 1.0e-6
+  patience: 7
+  checkpoint_dir: 'checkpoints'
+
+validation:
+  val_split: 0.2
+
+mixed_precision: true
+
+logging:
+  verbose: true
+  log_every: 10
